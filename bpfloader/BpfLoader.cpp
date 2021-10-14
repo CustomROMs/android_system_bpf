@@ -112,6 +112,8 @@ void createSysFsBpfSubDir(const char* const prefix) {
 }
 
 int main() {
+    bool ebpf_supported = android::base::GetBoolProperty("ro.kernel.ebpf.supported", false);
+    if (ebpf_supported) {
     // Load all ELF objects, create programs and maps, and pin them
     for (const auto location : locations) {
         createSysFsBpfSubDir(location.prefix);
@@ -124,6 +126,7 @@ int main() {
             sleep(20);
             return 2;
         }
+    }
     }
 
     if (android::base::SetProperty("bpf.progs_loaded", "1") == false) {
